@@ -1,0 +1,4 @@
+%{
+  "erlport": {:hex, :erlport, "0.9.8", "b7dc57eb87f215a671926bfbcd23e6e9c76f8653b0d072627b41431ef51c4d20", [:rebar3], []},
+  "export": {:hex, :export, "0.1.1", "6dfd268b0692428f89b9285859a2dc02b6dcd2e8fdfbca34ac6e6a331351df91", [:mix], [{:erlport, "~> 0.9", [hex: :erlport, optional: false]}]},
+}
