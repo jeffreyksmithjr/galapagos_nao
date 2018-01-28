@@ -5,39 +5,30 @@ from mxnet import nd, autograd, gluon
 data_ctx = mx.cpu()
 model_ctx = mx.cpu()
 
-batch_size = 64
-num_inputs = 784
-num_outputs = 10
-num_examples = 60000
+# Basic layers
+def dense(n, act_type):
+    act_type_str = act_type.decode("UTF-8")
+    if act_type_str == "none":
+        act_type_str = None
+    return gluon.nn.Dense(n, activation=act_type_str)
 
-def transform(data, label):
-    return data.astype(np.float32)/255, label.astype(np.float32)
+def activation(act_type):
+    return gluon.nn.Activation(act_type.decode("UTF-8"))
 
-train_data = mx.gluon.data.DataLoader(mx.gluon.data.vision.MNIST(train=True, transform=transform),
-                                      batch_size, shuffle=True)
-test_data = mx.gluon.data.DataLoader(mx.gluon.data.vision.MNIST(train=False, transform=transform),
-                                     batch_size, shuffle=False)
 
-num_hidden = 64
-
-def dense(n):
-    return gluon.nn.Dense(n)
-
-def dense_relu(n):
-    return gluon.nn.Dense(n, activation="relu")
-
+# Build the network
 def build(layers):
     net = gluon.nn.Sequential()
     with net.name_scope():
         for layer in layers:
             net.add(layer)
     return net
-    # net.add(gluon.nn.Dense(num_hidden, activation="relu"))
-    # net.add(gluon.nn.Dense(num_hidden, activation="relu"))
-    # net.add(gluon.nn.Dense(num_outputs))
 
+# Transform the data
+def transform(data, label):
+    return data.astype(np.float32)/255, label.astype(np.float32)
 
-
+# Evaluate model accuracy
 def evaluate_accuracy(data_iterator, net):
     acc = mx.metric.Accuracy()
     for i, (data, label) in enumerate(data_iterator):
@@ -48,10 +39,18 @@ def evaluate_accuracy(data_iterator, net):
         acc.update(preds=predictions, labels=label)
     return acc.get()[1]
 
-epochs = 1
-smoothing_constant = .01
 
 def run(net):
+    epochs = 1 # Should be 10 or more
+
+    batch_size = 64
+    num_examples = 60000
+
+    train_data = mx.gluon.data.DataLoader(mx.gluon.data.vision.MNIST(train=True, transform=transform),
+                                          batch_size, shuffle=True)
+    test_data = mx.gluon.data.DataLoader(mx.gluon.data.vision.MNIST(train=False, transform=transform),
+                                     batch_size, shuffle=False)
+
     net.collect_params().initialize(mx.init.Normal(sigma=.1), ctx=model_ctx)
     softmax_cross_entropy = gluon.loss.SoftmaxCrossEntropyLoss()
     trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': .01})
