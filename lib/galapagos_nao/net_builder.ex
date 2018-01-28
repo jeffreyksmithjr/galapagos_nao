@@ -12,6 +12,7 @@ defmodule GN.NetBuilder do
     end
   end
 
+  # Basic layers
   @type activation_functions :: :relu | :sigmoid | :tanh | :softrelu | :none
 
   @spec dense(any(), integer, activation_functions) :: any()
@@ -24,5 +25,21 @@ defmodule GN.NetBuilder do
   def activation(py, activation) do
     act_type = Atom.to_string(activation)
     py |> call(activation(act_type))
+  end
+
+  def dropout(py, rate) do
+    py |> call(dropout(rate))
+  end
+
+  def batch_norm(py) do
+    py |> call(batch_norm())
+  end
+
+  def leaky_relu(py, alpha) do
+    py |> call(leaky_relu(alpha))
+  end
+
+  def flatten(py) do
+    py |> call(flatten())
   end
 end

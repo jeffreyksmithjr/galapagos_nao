@@ -15,6 +15,17 @@ def dense(n, act_type):
 def activation(act_type):
     return gluon.nn.Activation(act_type.decode("UTF-8"))
 
+def dropout(rate):
+    return gluon.nn.Dropout(rate)
+
+def batch_norm():
+    return gluon.nn.BatchNorm()
+
+def leaky_relu(alpha):
+    return gluon.nn.LeakyReLU(alpha=alpha)
+
+def flatten():
+    return gluon.nn.Flatten()
 
 # Build the network
 def build(layers):
