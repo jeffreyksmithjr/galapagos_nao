@@ -16,7 +16,7 @@ defmodule GN.Gluon do
   @type activation_functions :: :relu | :sigmoid | :tanh | :softrelu | :none
 
   @spec dense(any(), integer, activation_functions) :: any()
-  def dense(py, n, activation \\ :none) do
+  def dense(py, n, activation) do
     act_type = Atom.to_string(activation)
     py |> call(dense(n, act_type))
   end
