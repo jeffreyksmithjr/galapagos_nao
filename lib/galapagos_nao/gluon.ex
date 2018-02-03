@@ -21,7 +21,7 @@ defmodule GN.Gluon do
     py |> call(dense(n, act_type))
   end
 
-  @spec dense(any(), activation_functions) :: any()
+  @spec activation(any(), activation_functions) :: any()
   def activation(py, activation) do
     act_type = Atom.to_string(activation)
     py |> call(activation(act_type))
