@@ -1,4 +1,4 @@
-defmodule GN.NetBuilder do
+defmodule GN.Gluon do
   def start() do
     Export.Python.start(python: "python3", python_path: Path.expand("lib/python"))
   end

@@ -1,4 +1,4 @@
-import GN.NetBuilder
+import GN.Gluon
 
 {:ok, py} = start()
 
