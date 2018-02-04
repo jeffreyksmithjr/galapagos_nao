@@ -10,6 +10,8 @@ defmodule GN.Evolution do
     flatten: &flatten/1
   }
 
+  @activation_functions [:relu, :sigmoid, :tanh, :softrelu, :none]
+
   @mutation_rate 0.25
   @std_dev 2
 
@@ -26,7 +28,7 @@ defmodule GN.Evolution do
 
     cond do
       :rand.uniform() < mutation_rate ->
-        new_layer_type = Enum.take_random(Map.keys(@layer_types), 1) |> hd()
+        [new_layer_type] = Enum.take_random(Map.keys(@layer_types), 1)
 
         new_params =
           seed_params(new_layer_type)
@@ -40,14 +42,12 @@ defmodule GN.Evolution do
   end
 
   def mutate_params(params, mutation_rate) do
-    activation_functions = [:relu, :sigmoid, :tanh, :softrelu, :none]
-
     for param <- params do
       cond do
         :rand.uniform() < mutation_rate ->
           cond do
             is_atom(param) ->
-              Enum.take_random(activation_functions, 1) |> hd()
+              Enum.take_random(@activation_functions, 1) |> hd()
 
             is_integer(param) ->
               Statistics.Distributions.Normal.rand(param, @std_dev)
@@ -77,5 +77,9 @@ defmodule GN.Evolution do
     with_py = [py | params]
     IO.puts(layer_type)
     Map.get(@layer_types, layer_type) |> apply(with_py)
+  end
+
+  def activation_functions() do
+    @activation_functions
   end
 end
