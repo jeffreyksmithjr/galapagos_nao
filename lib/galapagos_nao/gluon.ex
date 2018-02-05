@@ -13,7 +13,12 @@ defmodule GN.Gluon do
   end
 
   # Basic layers
+  @activation_functions [:relu, :sigmoid, :tanh, :softrelu, :none]
   @type activation_functions :: :relu | :sigmoid | :tanh | :softrelu | :none
+
+  def activation_functions() do
+    @activation_functions
+  end
 
   @spec dense(any(), integer, activation_functions) :: any()
   def dense(py, n, activation) do
