@@ -55,8 +55,12 @@ defmodule GN.Evolution do
               Statistics.Distributions.Normal.rand(param, @std_dev)
               |> Statistics.Math.to_int()
 
-            true ->
+            is_float(param) ->
               Statistics.Distributions.Normal.rand(param, @std_dev)
+
+            true ->
+              IO.puts("True clause:")
+              IO.puts(param)
           end
 
         true ->

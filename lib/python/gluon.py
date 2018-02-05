@@ -52,7 +52,7 @@ def evaluate_accuracy(data_iterator, net):
 
 
 def run(net):
-    epochs = 1 # Should be 10 or more
+    epochs = 2 # Should be 10 or more
 
     batch_size = 64
     num_examples = 60000

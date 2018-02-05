@@ -25,3 +25,5 @@ galapagos_nao-*.tar
 *.iml
 
 .idea/*
+
+*.pyc
