@@ -1,7 +1,9 @@
 defmodule GN.Orchestration do
   import GN.Gluon
+  import GN.Evolution, only: [spawn_offspring: 1, build_layer: 2]
 
-  @timeout 300000 # 5 minutes
+  # 5 minutes
+  @timeout 300_000
 
   def pmap(collection, function) do
     collection
@@ -10,10 +12,14 @@ defmodule GN.Orchestration do
   end
 
   def start_and_spawn(seed_layers) do
-    {:ok, py} = start()
-    net = GN.Evolution.spawn_offspring(seed_layers, py)
-    trained_net = py |> call(run(net))
-    py |> call(print_net(trained_net))
-  end
+    id = UUID.uuid4()
+    layers = spawn_offspring(seed_layers)
 
+    {:ok, py} = start()
+    built_layers = Enum.map(layers, &build_layer(&1, py))
+    built_net = py |> call(build(built_layers))
+    test_acc = py |> call(run(built_net))
+
+    %{id: id, layers: layers, test_acc: test_acc}
+  end
 end

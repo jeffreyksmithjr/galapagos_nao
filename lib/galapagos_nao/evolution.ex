@@ -17,12 +17,8 @@ defmodule GN.Evolution do
   @mutation_rate 0.25
   @std_dev 2
 
-  def spawn_offspring(seed_layers, py, mutation_rate \\ @mutation_rate) do
-    offspring_layers =
-      Enum.map(seed_layers, &mutate(&1, mutation_rate))
-      |> Enum.map(&build_layer(&1, py))
-
-    py |> call(build(offspring_layers))
+  def spawn_offspring(seed_layers, mutation_rate \\ @mutation_rate) do
+    Enum.map(seed_layers, &mutate(&1, mutation_rate))
   end
 
   def mutate(layer, mutation_rate) do
@@ -56,11 +52,7 @@ defmodule GN.Evolution do
               |> Statistics.Math.to_int()
 
             is_float(param) ->
-              Statistics.Distributions.Normal.rand(param, @std_dev)
-
-            true ->
-              IO.puts("True clause:")
-              IO.puts(param)
+              :rand.uniform()
           end
 
         true ->
@@ -81,7 +73,6 @@ defmodule GN.Evolution do
 
   def build_layer({layer_type, params}, py) do
     with_py = [py | params]
-    IO.puts(layer_type)
     Map.get(layer_types(), layer_type) |> apply(with_py)
   end
 end

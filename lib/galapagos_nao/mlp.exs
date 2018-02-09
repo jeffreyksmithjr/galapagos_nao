@@ -13,5 +13,5 @@ seed_layers = [l1, l2, l3, l4, l5, l6, l7, l8]
 nets = pmap(1..4, fn _n -> start_and_spawn(seed_layers) end)
 
 for net <- nets do
-  IO.puts(net)
+  IO.puts(inspect(net))
 end

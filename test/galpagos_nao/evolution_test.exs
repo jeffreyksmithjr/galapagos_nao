@@ -31,20 +31,20 @@ defmodule GN.EvolutionTest do
     assert Enum.member?(activation_functions, result)
   end
 
-  test "doesn't mutate layers" do
+  test "doesn't mutate layer" do
     seed_layer = {:dense, [128, :relu]}
     mutation_rate = 0.0
     assert mutate(seed_layer, mutation_rate) == seed_layer
   end
 
-  test "mutates layers" do
+  test "mutates layer" do
     seed_layer = {:dense, [128, :relu]}
     mutation_rate = 1.0
-    {new_layer_type, [_params]} = mutate(seed_layer, mutation_rate)
+    {new_layer_type, _params} = mutate(seed_layer, mutation_rate)
     assert Enum.member?(Map.keys(layer_types()), new_layer_type)
   end
 
-  test "mutates seed net and builds it" do
+  test "mutates seed net" do
     seed_net = [
       {:dense, [24, :softrelu]},
       {:activation, [:tanh]},
@@ -52,7 +52,8 @@ defmodule GN.EvolutionTest do
       {:flatten, []}
     ]
 
-    {:ok, py} = start()
-    assert match?({:"$erlport.opaque", :python, _}, spawn_offspring(seed_net, py))
+    offspring = spawn_offspring(seed_net)
+    layer_types = Map.keys(layer_types())
+    assert Enum.all?(offspring, &Enum.member?(layer_types, elem(&1, 0)))
   end
 end

@@ -52,7 +52,7 @@ def evaluate_accuracy(data_iterator, net):
 
 
 def run(net):
-    epochs = 2 # Should be 10 or more
+    epochs = 1 # Should be 10 or more
 
     batch_size = 64
     num_examples = 60000
@@ -65,6 +65,8 @@ def run(net):
     net.collect_params().initialize(mx.init.Normal(sigma=.1), ctx=model_ctx)
     softmax_cross_entropy = gluon.loss.SoftmaxCrossEntropyLoss()
     trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': .01})
+
+    test_accuracy = 0.0
 
     for e in range(epochs):
         cumulative_loss = 0
@@ -83,7 +85,7 @@ def run(net):
         print("Epoch %s. Loss: %s, Train_acc %s, Test_acc %s" %
               (e, cumulative_loss/num_examples, train_accuracy, test_accuracy))
 
-    return net
+    return float(test_accuracy)
 
 def print_net(net):
     return net.__str__()
