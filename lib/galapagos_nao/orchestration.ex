@@ -37,7 +37,7 @@ defmodule GN.Orchestration do
         seed_layers = net.layers
         pmap(1..batch_size, fn _n -> start_and_spawn(seed_layers) end)
       end
-      |> Enum.flat_map(fn n -> n end)
+      |> Enum.flat_map(&(&1))
 
     inspect_generation(generation)
 
@@ -50,15 +50,15 @@ defmodule GN.Orchestration do
     end
   end
 
-  def evolve(net, generations) when generations > 0 do
+  def evolve(nets, generations) when generations > 0 do
     IO.puts("Generations remaining: #{generations}")
 
-    learn_generation(net)
+    learn_generation(nets)
     |> select()
     |> evolve(generations - 1)
   end
 
-  def evolve(net, _generations) do
-    net
+  def evolve(nets, _generations) do
+    nets
   end
 end
