@@ -7,9 +7,9 @@ defmodule GN.Selection do
     cutoffs = cutoffs(nets)
 
     for net <- nets do
-      complexity = length(Map.get(net, :layers))
+      complexity = length(net.layers)
       level = Enum.min([Enum.find_index(cutoffs, &(&1 >= complexity)) + 1, @complexity_levels])
-      net_acc = Map.get(net, :test_acc)
+      net_acc = net.test_acc
       elite_acc = Map.get(get(__MODULE__, level), :test_acc)
 
       if is_nil(elite_acc) or net_acc > elite_acc do
