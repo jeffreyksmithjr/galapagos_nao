@@ -10,6 +10,7 @@ defmodule GN.Application do
     children = [
       # Starts a worker by calling: GN.Worker.start_link(arg)
       # {GN.Worker, arg},
+      {GN.Selection, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
