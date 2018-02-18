@@ -37,7 +37,7 @@ defmodule GN.Orchestration do
         seed_layers = net.layers
         pmap(1..batch_size, fn _n -> start_and_spawn(seed_layers) end)
       end
-      |> Enum.flat_map(&(&1))
+      |> Enum.flat_map(& &1)
 
     inspect_generation(generation)
 

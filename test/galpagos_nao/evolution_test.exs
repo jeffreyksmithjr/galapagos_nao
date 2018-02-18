@@ -44,6 +44,12 @@ defmodule GN.EvolutionTest do
     assert Enum.member?(Map.keys(layer_types()), new_layer_type)
   end
 
+  test "returns a layer" do
+    mutation_rate = 1.0
+    {layer_type, _params} = mutate_layer(mutation_rate)
+    assert Enum.member?(Map.keys(layer_types()), layer_type)
+  end
+
   test "mutates seed net" do
     seed_net = [
       {:dense, [24, :softrelu]},

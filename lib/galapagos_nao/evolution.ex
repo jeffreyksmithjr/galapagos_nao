@@ -21,22 +21,21 @@ defmodule GN.Evolution do
     Enum.map(seed_layers, &mutate(&1, mutation_rate))
   end
 
-  def mutate(layer, mutation_rate) do
-    {seed_layer_type, seed_params} = layer
-
+  def mutate({seed_layer_type, seed_params} = _layer, mutation_rate) do
     cond do
-      :rand.uniform() < mutation_rate ->
-        [new_layer_type] = Enum.take_random(Map.keys(layer_types()), 1)
-
-        new_params =
-          seed_params(new_layer_type)
-          |> mutate_params(mutation_rate)
-
-        {new_layer_type, new_params}
-
-      true ->
-        {seed_layer_type, mutate_params(seed_params, mutation_rate)}
+      :rand.uniform() < mutation_rate -> mutate_layer(mutation_rate)
+      true -> {seed_layer_type, mutate_params(seed_params, mutation_rate)}
     end
+  end
+
+  def mutate_layer(mutation_rate) do
+    [new_layer_type] = Enum.take_random(Map.keys(layer_types()), 1)
+
+    new_params =
+      seed_params(new_layer_type)
+      |> mutate_params(mutation_rate)
+
+    {new_layer_type, new_params}
   end
 
   def mutate_params(params, mutation_rate) do
