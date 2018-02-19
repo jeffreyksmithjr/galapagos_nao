@@ -70,4 +70,17 @@ defmodule GN.EvolutionTest do
   test "doesn't mutate when mutation rate is low" do
     assert should_mutate(0.0) == false
   end
+
+  test "removes layers" do
+    seed_net = [
+      {:dense, [24, :softrelu]},
+      {:activation, [:tanh]},
+      {:dropout, [0.25]},
+      {:flatten, []}
+    ]
+
+    mutation_rate = 1.0
+    removed_net = remove(seed_net, mutation_rate)
+    assert length(removed_net) == 0
+  end
 end

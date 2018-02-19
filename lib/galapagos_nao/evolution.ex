@@ -18,7 +18,12 @@ defmodule GN.Evolution do
   @std_dev 2
 
   def spawn_offspring(seed_layers, mutation_rate \\ @mutation_rate) do
-    Enum.map(seed_layers, &mutate(&1, mutation_rate))
+    remove(seed_layers, mutation_rate)
+    |> Enum.map(&mutate(&1, mutation_rate))
+  end
+
+  def remove(seed_layers, mutation_rate) do
+    Enum.filter(seed_layers, fn _ -> !should_mutate(mutation_rate) end)
   end
 
   def mutate({seed_layer_type, seed_params} = _layer, mutation_rate) do
