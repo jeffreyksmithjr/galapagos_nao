@@ -62,4 +62,12 @@ defmodule GN.EvolutionTest do
     layer_types = Map.keys(layer_types())
     assert Enum.all?(offspring, &Enum.member?(layer_types, elem(&1, 0)))
   end
+
+  test "mutates when mutation rate is high" do
+    assert should_mutate(1.0) == true
+  end
+
+  test "doesn't mutate when mutation rate is low" do
+    assert should_mutate(0.0) == false
+  end
 end

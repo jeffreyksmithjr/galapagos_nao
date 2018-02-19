@@ -23,7 +23,7 @@ defmodule GN.Evolution do
 
   def mutate({seed_layer_type, seed_params} = _layer, mutation_rate) do
     cond do
-      :rand.uniform() < mutation_rate -> mutate_layer(mutation_rate)
+      should_mutate(mutation_rate) -> mutate_layer(mutation_rate)
       true -> {seed_layer_type, mutate_params(seed_params, mutation_rate)}
     end
   end
@@ -41,7 +41,7 @@ defmodule GN.Evolution do
   def mutate_params(params, mutation_rate) do
     for param <- params do
       cond do
-        :rand.uniform() < mutation_rate ->
+        should_mutate(mutation_rate) ->
           cond do
             is_atom(param) ->
               Enum.take_random(activation_functions(), 1) |> hd()
@@ -73,5 +73,9 @@ defmodule GN.Evolution do
   def build_layer({layer_type, params}, py) do
     with_py = [py | params]
     Map.get(layer_types(), layer_type) |> apply(with_py)
+  end
+
+  def should_mutate(mutation_rate) do
+    :rand.uniform() < mutation_rate
   end
 end
