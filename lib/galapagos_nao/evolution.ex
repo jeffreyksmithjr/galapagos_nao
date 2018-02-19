@@ -18,8 +18,45 @@ defmodule GN.Evolution do
   @std_dev 2
 
   def spawn_offspring(seed_layers, mutation_rate \\ @mutation_rate) do
-    remove(seed_layers, mutation_rate)
+    duplicate(seed_layers, mutation_rate)
+    |> remove(mutation_rate)
     |> Enum.map(&mutate(&1, mutation_rate))
+  end
+
+  def duplicate(seed_layers, mutation_rate, all \\ false) do
+    cond do
+      should_mutate(mutation_rate) ->
+        end_index = length(seed_layers) - 1
+        duplicate_segment = random_slice(seed_layers, all)
+        insertion_point = find_insertion_point(end_index)
+
+        Enum.concat([
+          Enum.slice(seed_layers, 0..insertion_point),
+          duplicate_segment,
+          Enum.slice(seed_layers, (insertion_point + 1)..end_index)
+        ])
+
+      true ->
+        seed_layers
+    end
+  end
+
+  def random_slice(seed_layers, true) do
+    seed_layers
+  end
+
+  def random_slice(seed_layers, _false) do
+    end_index = length(seed_layers) - 1
+    [slice_start, slice_finish] = find_slice(end_index)
+    Enum.slice(seed_layers, slice_start..slice_finish)
+  end
+
+  def find_slice(end_index) do
+    Enum.take_random(0..end_index, 2) |> Enum.sort()
+  end
+
+  def find_insertion_point(end_index) do
+    Enum.take_random(0..end_index, 1) |> hd()
   end
 
   def remove(seed_layers, mutation_rate) do

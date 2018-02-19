@@ -73,14 +73,27 @@ defmodule GN.EvolutionTest do
 
   test "removes layers" do
     seed_net = [
-      {:dense, [24, :softrelu]},
+      {:dense, [102, :softrelu]},
       {:activation, [:tanh]},
-      {:dropout, [0.25]},
+      {:dropout, [0.50]},
       {:flatten, []}
     ]
 
     mutation_rate = 1.0
     removed_net = remove(seed_net, mutation_rate)
     assert length(removed_net) == 0
+  end
+
+  test "duplicates layers" do
+    seed_net = [
+      {:dense, [12, :relu]},
+      {:activation, [:tanh]},
+      {:dropout, [0.15]},
+      {:flatten, []}
+    ]
+
+    mutation_rate = 1.0
+    removed_net = duplicate(seed_net, mutation_rate, true)
+    assert length(removed_net) == 8
   end
 end
