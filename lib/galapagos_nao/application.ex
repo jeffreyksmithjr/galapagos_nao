@@ -10,12 +10,13 @@ defmodule GN.Application do
     children = [
       # Starts a worker by calling: GN.Worker.start_link(arg)
       # {GN.Worker, arg},
-      {GN.Selection, []}
+      {GN.Selection, []},
+      {GN.Supervisor, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: GN.Supervisor]
+    opts = [strategy: :one_for_one, name: GN.MetaSupervisor]
     Supervisor.start_link(children, opts)
   end
 end

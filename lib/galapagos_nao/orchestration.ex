@@ -6,15 +6,10 @@ defmodule GN.Orchestration do
 
   # 5 minutes
   @timeout 300_000
-  @max_parallel 4
+  @generation_size 4
 
-  def pmap(collection, function) do
-    collection
-    |> Enum.map(&Task.async(fn -> function.(&1) end))
-    |> Enum.map(&Task.await(&1, @timeout))
-  end
-
-  def start_and_spawn(seed_layers) do
+  def start_and_spawn({_level, net}) do
+    seed_layers = net.layers
     layers = spawn_offspring(seed_layers)
 
     {:ok, py} = start()
@@ -26,28 +21,33 @@ defmodule GN.Orchestration do
   end
 
   def learn_generation(%Network{} = initial_net) do
-    learn_generation(%{-1 => initial_net})
+    # clone the initial net to create a generation
+    nets =
+      Enum.reduce(1..@generation_size, %{}, fn n, acc ->
+        Map.put(acc, -1 * n, initial_net)
+      end)
+
+    learn_generation(nets)
+  end
+
+  def learn_generation(nets) when map_size(nets) == 1 do
+    # too little diversity in complexity, so clones must be spawned
+    [net] = Map.values(nets)
+    learn_generation(net)
   end
 
   def learn_generation(nets) do
-    batch_size = (@max_parallel / map_size(nets)) |> Statistics.Math.to_int()
+    tasks =
+      Task.Supervisor.async_stream_nolink(
+        GN.TaskSupervisor,
+        nets,
+        &start_and_spawn(&1),
+        timeout: @timeout
+      )
 
-    generation =
-      for {_level, net} <- nets do
-        seed_layers = net.layers
-        pmap(1..batch_size, fn _n -> start_and_spawn(seed_layers) end)
-      end
-      |> Enum.flat_map(& &1)
-
-    inspect_generation(generation)
-
+    generation = for {status, net} <- tasks, status == :ok, do: net
+    IO.puts(inspect(generation))
     generation
-  end
-
-  def inspect_generation(nets) do
-    for net <- nets do
-      IO.puts(inspect(net))
-    end
   end
 
   def evolve(nets, generations) when generations > 0 do
