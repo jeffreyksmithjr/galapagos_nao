@@ -1,6 +1,6 @@
 defmodule GN.Gluon do
   def start() do
-    Export.Python.start(python: "python3", python_path: Path.expand("lib/python"))
+    Export.Python.start(python: "python", python_path: Path.expand("lib/python"))
   end
 
   defmacro call(instance, expression) do
