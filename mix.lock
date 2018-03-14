@@ -1,4 +1,5 @@
 %{
+  "confex": {:hex, :confex, "3.3.1", "8febaf751bf293a16a1ed2cbd258459cdcc7ca53cfa61d3f83d49dd276a992b4", [:mix], []},
   "erlport": {:hex, :erlport, "0.9.8", "b7dc57eb87f215a671926bfbcd23e6e9c76f8653b0d072627b41431ef51c4d20", [:rebar3], []},
   "export": {:hex, :export, "0.1.1", "6dfd268b0692428f89b9285859a2dc02b6dcd2e8fdfbca34ac6e6a331351df91", [:mix], [{:erlport, "~> 0.9", [hex: :erlport, optional: false]}]},
   "statistics": {:hex, :statistics, "0.5.0", "9555b725b84b3cb784e1494de058598083c715509564021a66d2c9c976ae3f89", [:mix], []},

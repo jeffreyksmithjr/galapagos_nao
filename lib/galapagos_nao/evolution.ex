@@ -103,13 +103,8 @@ defmodule GN.Evolution do
   end
 
   def seed_params(layer_type) do
-    case layer_type do
-      :dense -> [64, :none]
-      :activation -> [:relu]
-      :dropout -> [0.5]
-      :leaky_relu -> [0.2]
-      _ -> []
-    end
+    {:ok, [layer_types: types]} = Confex.fetch_env(:galapagos_nao, GN.Evolution)
+    Map.get(types, layer_type, [])
   end
 
   def build_layer({layer_type, params}, py) do

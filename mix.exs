@@ -26,7 +26,8 @@ defmodule GN.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       {:export, "~> 0.1.1"},
       {:statistics, "~> 0.5.0"},
-      {:uuid, "~> 1.1"}
+      {:uuid, "~> 1.1"},
+      {:confex, "~> 3.3.1"}
     ]
   end
 end
