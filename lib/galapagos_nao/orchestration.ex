@@ -5,8 +5,8 @@ defmodule GN.Orchestration do
   import GN.Selection, only: [select: 1]
 
   # 5 minutes
-  @timeout 300_000
-  @generation_size 4
+  @timeout Confex.fetch_env!(:galapagos_nao, GN.Orchestration)[:timeout]
+  @generation_size Confex.fetch_env!(:galapagos_nao, GN.Orchestration)[:generation_size]
 
   def start_and_spawn({_level, net}) do
     seed_layers = net.layers

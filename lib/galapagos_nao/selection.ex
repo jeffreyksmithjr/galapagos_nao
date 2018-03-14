@@ -1,7 +1,7 @@
 defmodule GN.Selection do
   use Agent
 
-  @complexity_levels 2
+  @complexity_levels Confex.fetch_env!(:galapagos_nao, GN.Orchestration)[:complexity_levels]
 
   def select(nets) do
     cutoffs = cutoffs(nets)

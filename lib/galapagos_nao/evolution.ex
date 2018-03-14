@@ -103,7 +103,7 @@ defmodule GN.Evolution do
   end
 
   def seed_params(layer_type) do
-    {:ok, [layer_types: types]} = Confex.fetch_env(:galapagos_nao, GN.Evolution)
+    [layer_types: types] = Confex.fetch_env!(:galapagos_nao, GN.Evolution)
     Map.get(types, layer_type, [])
   end
 

@@ -24,6 +24,12 @@ use Mix.Config
 config :galapagos_nao, GN.Evolution,
   layer_types: %{dense: [64, :none], activation: [:relu], dropout: [0.5], leaky_relu: [0.2]}
 
+config :galapagos_nao, GN.Orchestration,
+  timeout: 300_000,
+  generation_size: 4
+
+config :galapagos_nao, GN.Orchestration, complexity_levels: 2
+
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
 # by uncommenting the line below and defining dev.exs, test.exs and such.
