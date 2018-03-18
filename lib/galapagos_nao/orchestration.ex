@@ -48,11 +48,13 @@ defmodule GN.Orchestration do
   end
 
   def evolve(nets, generations) when generations > 0 do
-    IO.puts("Generations remaining: #{generations}")
+    Task.Supervisor.async(GN.TaskSupervisor, fn ->
+      IO.puts("Generations remaining: #{generations}")
 
-    learn_generation(nets)
-    |> select()
-    |> evolve(generations - 1)
+      learn_generation(nets)
+      |> select()
+      |> evolve(generations - 1)
+    end)
   end
 
   def evolve(nets, _generations) do

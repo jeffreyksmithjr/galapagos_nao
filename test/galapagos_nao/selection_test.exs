@@ -20,9 +20,9 @@ defmodule GN.SelectionTest do
   end
 
   test "adds new elites" do
-    put(GN.Selection, 1, %Network{id: "old-one", layers: [:flatten, []], test_acc: 0.01})
+    put(1, %Network{id: "old-one", layers: [:flatten, []], test_acc: 0.01})
 
-    put(GN.Selection, 2, %Network{
+    put(2, %Network{
       id: "old-two",
       layers: [{:dense, [24, :softrelu]}, {:activation, [:tanh]}, {:dropout, [0.25]}],
       test_acc: 0.01
@@ -58,10 +58,10 @@ defmodule GN.SelectionTest do
     elites = [first_net, second_net]
 
     for net <- elites do
-      put(GN.Selection, elem(net, 0), elem(net, 1))
+      put(elem(net, 0), elem(net, 1))
     end
 
     expectation = Enum.into(elites, %{})
-    assert get_all(GN.Selection) == expectation
+    assert get_all() == expectation
   end
 end

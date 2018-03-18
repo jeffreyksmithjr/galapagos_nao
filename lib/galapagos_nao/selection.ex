@@ -8,14 +8,14 @@ defmodule GN.Selection do
       complexity = length(net.layers)
       level = Enum.min([Enum.find_index(cutoffs, &(&1 >= complexity)) + 1, complexity_levels()])
       net_acc = net.test_acc
-      elite_acc = Map.get(get(__MODULE__, level), :test_acc)
+      elite_acc = Map.get(get(level), :test_acc)
 
       if is_nil(elite_acc) or net_acc > elite_acc do
-        put(__MODULE__, level, net)
+        put(level, net)
       end
     end
 
-    get_all(__MODULE__)
+    get_all()
   end
 
   def cutoffs(nets) do
@@ -38,15 +38,15 @@ defmodule GN.Selection do
     Agent.start_link(fn -> %{} end, name: __MODULE__)
   end
 
-  def put(pid, key, value) do
-    Agent.update(pid, &Map.put(&1, key, value))
+  def put(key, value) do
+    Agent.update(__MODULE__, &Map.put(&1, key, value))
   end
 
-  def get(pid, key) do
-    Agent.get(pid, &Map.get(&1, key, %{}))
+  def get(key) do
+    Agent.get(__MODULE__, &Map.get(&1, key, %{}))
   end
 
-  def get_all(pid) do
-    Agent.get(pid, & &1)
+  def get_all() do
+    Agent.get(__MODULE__, & &1)
   end
 end
