@@ -4,10 +4,6 @@ defmodule GN.Orchestration do
   alias GN.Network, as: Network
   import GN.Selection, only: [select: 1]
 
-  # 5 minutes
-  @timeout Confex.fetch_env!(:galapagos_nao, GN.Orchestration)[:timeout]
-  @generation_size Confex.fetch_env!(:galapagos_nao, GN.Orchestration)[:generation_size]
-
   def start_and_spawn({_level, net}) do
     seed_layers = net.layers
     layers = spawn_offspring(seed_layers)
@@ -21,9 +17,10 @@ defmodule GN.Orchestration do
   end
 
   def learn_generation(%Network{} = initial_net) do
+    generation_size = GN.Parameters.get(__MODULE__, :generation_size)
     # clone the initial net to create a generation
     nets =
-      Enum.reduce(1..@generation_size, %{}, fn n, acc ->
+      Enum.reduce(1..generation_size, %{}, fn n, acc ->
         Map.put(acc, -1 * n, initial_net)
       end)
 
@@ -42,7 +39,7 @@ defmodule GN.Orchestration do
         GN.TaskSupervisor,
         nets,
         &start_and_spawn(&1),
-        timeout: @timeout
+        timeout: GN.Parameters.get(__MODULE__, :timeout)
       )
 
     generation = for {status, net} <- tasks, status == :ok, do: net
@@ -51,11 +48,13 @@ defmodule GN.Orchestration do
   end
 
   def evolve(nets, generations) when generations > 0 do
-    IO.puts("Generations remaining: #{generations}")
+    Task.Supervisor.async(GN.TaskSupervisor, fn ->
+      IO.puts("Generations remaining: #{generations}")
 
-    learn_generation(nets)
-    |> select()
-    |> evolve(generations - 1)
+      learn_generation(nets)
+      |> select()
+      |> evolve(generations - 1)
+    end)
   end
 
   def evolve(nets, _generations) do
