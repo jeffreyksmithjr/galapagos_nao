@@ -11,7 +11,8 @@ defmodule GN.Application do
       # Starts a worker by calling: GN.Worker.start_link(arg)
       # {GN.Worker, arg},
       {GN.Selection, []},
-      {GN.Supervisor, []}
+      {GN.Supervisor, []},
+      {GN.Parameters, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

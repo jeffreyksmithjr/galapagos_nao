@@ -28,7 +28,7 @@ config :galapagos_nao, GN.Orchestration,
   timeout: 300_000,
   generation_size: 4
 
-config :galapagos_nao, GN.Orchestration, complexity_levels: 2
+config :galapagos_nao, GN.Selection, complexity_levels: 2
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment

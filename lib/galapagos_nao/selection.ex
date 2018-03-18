@@ -1,14 +1,12 @@
 defmodule GN.Selection do
   use Agent
 
-  @complexity_levels Confex.fetch_env!(:galapagos_nao, GN.Orchestration)[:complexity_levels]
-
   def select(nets) do
     cutoffs = cutoffs(nets)
 
     for net <- nets do
       complexity = length(net.layers)
-      level = Enum.min([Enum.find_index(cutoffs, &(&1 >= complexity)) + 1, @complexity_levels])
+      level = Enum.min([Enum.find_index(cutoffs, &(&1 >= complexity)) + 1, complexity_levels()])
       net_acc = net.test_acc
       elite_acc = Map.get(get(__MODULE__, level), :test_acc)
 
@@ -25,11 +23,15 @@ defmodule GN.Selection do
       Enum.map(nets, &length(Map.get(&1, :layers)))
       |> Enum.max()
 
-    interval = max_complexity / @complexity_levels
+    interval = max_complexity / complexity_levels()
 
-    for level <- 1..@complexity_levels do
+    for level <- 1..complexity_levels() do
       interval * level
     end
+  end
+
+  def complexity_levels do
+    GN.Parameters.get(__MODULE__, :complexity_levels)
   end
 
   def start_link(_) do
