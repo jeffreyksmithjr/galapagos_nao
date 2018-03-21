@@ -7,7 +7,7 @@ _A playground for interactive neuroevolution_
 
 ## Installation
 
-Since this is not a pure Elixir library, the easiest way of getting started is to pull the latest Docker image: [jeffreyksmithjr/galapagos_nao](https://hub.docker.com/r/jeffreyksmithjr/galapagos_nao/)
+Since this library uses both Elixir and Python, the easiest way of getting started is to pull the latest Docker image: [jeffreyksmithjr/galapagos_nao](https://hub.docker.com/r/jeffreyksmithjr/galapagos_nao/)
 
 ## Getting Started
 
