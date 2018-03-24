@@ -6,13 +6,13 @@ services:
 stages:
   - name: build_and_test
     script:
-      - docker build -t galapagos_nao .
+      docker build -t galapagos_nao .
   - name: deploy
     # require the branch name to be master
     if: branch = master
       script:
-        - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-        - docker images
-        - docker tag galapagos_nao $DOCKER_USERNAME/galapagos_nao:$TRAVIS_BUILD_NUMBER
-        - docker tag galapagos_nao $DOCKER_USERNAME/galapagos_nao:latest
-        - docker push $DOCKER_USERNAME/galapagos_nao
+        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+        docker images
+        docker tag galapagos_nao $DOCKER_USERNAME/galapagos_nao:$TRAVIS_BUILD_NUMBER
+        docker tag galapagos_nao $DOCKER_USERNAME/galapagos_nao:latest
+        docker push $DOCKER_USERNAME/galapagos_nao
