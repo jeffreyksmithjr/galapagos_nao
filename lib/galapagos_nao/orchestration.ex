@@ -47,17 +47,29 @@ defmodule GN.Orchestration do
     generation
   end
 
-  def evolve(nets, generations) when generations > 0 do
+  def decrement(generations) do
+    generations - 1
+  end
+
+  def evolve(nets, generations) do
+    evolve(nets, generations, &decrement/1)
+  end
+
+  def evolve_continuous(nets) do
+    evolve(nets, :infinity, & &1)
+  end
+
+  def evolve(nets, generations, count_function) when generations > 0 do
     Task.Supervisor.async(GN.TaskSupervisor, fn ->
       IO.puts("Generations remaining: #{generations}")
 
       learn_generation(nets)
       |> select()
-      |> evolve(generations - 1)
+      |> evolve(count_function.(generations), count_function)
     end)
   end
 
-  def evolve(nets, _generations) do
+  def evolve(nets, _generations, _count_function) do
     nets
   end
 end

@@ -1,5 +1,5 @@
 defmodule GN.Example do
-  import GN.Orchestration, only: [evolve: 2]
+  import GN.Orchestration, only: [evolve: 2, evolve_continuous: 1]
   alias GN.Network, as: Network
 
   def seed_layers() do
@@ -14,11 +14,11 @@ defmodule GN.Example do
     [l1, l2, l3, l4, l5, l6, l7, l8]
   end
 
-  def start() do
+  def short_example() do
     evolve(%Network{layers: seed_layers()}, 2)
   end
 
-  def final(task) do
-    Task.await(task)
+  def infinite_example() do
+    evolve_continuous(%Network{layers: seed_layers()})
   end
 end
