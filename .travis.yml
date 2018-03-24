@@ -8,7 +8,8 @@ script:
   - docker build -t galapagos_nao .
 
 after_success:
-  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then echo -e "Push Container to Docker Hub"; then
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+      echo -e "Push Container to Docker Hub";
       docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
       docker images;
       docker tag galapagos_nao $DOCKER_USERNAME/galapagos_nao:$TRAVIS_BUILD_NUMBER;
