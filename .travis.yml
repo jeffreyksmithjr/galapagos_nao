@@ -12,4 +12,5 @@ script:
   - docker tag galapagos_nao $DOCKER_USERNAME/galapagos_nao:$TRAVIS_BUILD_NUMBER
   - docker tag galapagos_nao $DOCKER_USERNAME/galapagos_nao:latest
   - docker push $DOCKER_USERNAME/galapagos_nao
+  on:
     branch: "master"
