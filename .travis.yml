@@ -6,8 +6,6 @@ services:
 stages:
   - name: build_and_test
     - docker build -t galapagos_nao .
-
-stages:
   - name: deploy
     # require the branch name to be master
     if: branch = master
