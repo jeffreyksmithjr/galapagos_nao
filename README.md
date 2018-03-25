@@ -5,6 +5,17 @@
 # Galápagos Nǎo
 _A playground for continuous, interactive neuroevolution_
 
+## Overview
+Galápagos Nǎo is intended to allow for the exploration of these ideas about machine learning:
+* [Neuroevolution](https://en.wikipedia.org/wiki/Neuroevolution)-the learning of deep learning architectures
+* [Interactive evolution](https://en.wikipedia.org/wiki/Interactive_evolutionary_computation)-the use of human intelligence to guide evolution computation
+* [Continuous learning](http://continuousai.com/background/)-defining machine learning tasks to run idefinitely, while retaining learned knowledge
+
+From a programming perspective, it allows developers to explore:
+* Integration of foreign language components
+* Metaprogramming
+* Functional programming techniques for machine learning
+
 ## Installation
 
 Since this library uses both Elixir and Python, the easiest way of getting started is to pull the latest Docker image: [jeffreyksmithjr/galapagos_nao](https://hub.docker.com/r/jeffreyksmithjr/galapagos_nao/)
