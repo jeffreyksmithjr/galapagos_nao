@@ -10,6 +10,7 @@ Galápagos Nǎo is intended to allow for the exploration of these ideas about ma
 * [Neuroevolution](https://en.wikipedia.org/wiki/Neuroevolution)-the learning of deep learning architectures
 * [Interactive evolution](https://en.wikipedia.org/wiki/Interactive_evolutionary_computation)-the use of human intelligence to guide evolution computation
 * [Continuous learning](http://continuousai.com/background/)-defining machine learning tasks to run idefinitely, while retaining learned knowledge
+* [Illumination algorithms](https://arxiv.org/abs/1504.04909)-algorithms that attempt to illuminate the properties of the feature space, rather than optimize for singular solutions
 
 From a programming perspective, it allows developers to explore:
 * Integration of foreign language components
