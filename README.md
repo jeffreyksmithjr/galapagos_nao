@@ -70,7 +70,7 @@ iex(2)> GN.Selection.get_all()
 }
 ```
 
-## Continuous Learning
+## Continual Learning
 Since the processes of learning and inspecting the results can occur concurrently, learning can continue indefinitely.
 ```
 iex(3)> GN.Example.infinite_example()
