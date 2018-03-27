@@ -1,7 +1,7 @@
 defmodule GN.Selection do
   use Agent
 
-  def select(nets) do
+  def select(pid \\ __MODULE__, nets) do
     cutoffs = cutoffs(nets)
 
     for net <- nets do
@@ -11,11 +11,11 @@ defmodule GN.Selection do
       elite_acc = Map.get(get(level), :test_acc)
 
       if is_nil(elite_acc) or net_acc > elite_acc do
-        put(level, net)
+        put(pid, level, net)
       end
     end
 
-    get_all()
+    get_all(pid)
   end
 
   def cutoffs(nets) do
@@ -34,19 +34,25 @@ defmodule GN.Selection do
     GN.Parameters.get(__MODULE__, :complexity_levels)
   end
 
-  def start_link(_) do
-    Agent.start_link(fn -> %{} end, name: __MODULE__)
+  def start_link(opts \\ []) do
+    opts = Keyword.put_new(opts, :name, __MODULE__)
+    Agent.start_link(fn -> %{} end, opts)
   end
 
-  def put(key, value) do
-    Agent.update(__MODULE__, &Map.put(&1, key, value))
+  def put_unevaluated(pid \\ __MODULE__, net) do
+    new_id = (get_all(pid) |> Map.keys() |> Enum.min(fn -> 0 end)) - 1
+    put(pid, new_id, net)
   end
 
-  def get(key) do
-    Agent.get(__MODULE__, &Map.get(&1, key, %{}))
+  def put(pid \\ __MODULE__, key, net) do
+    Agent.update(pid, &Map.put(&1, key, net))
   end
 
-  def get_all() do
-    Agent.get(__MODULE__, & &1)
+  def get(pid \\ __MODULE__, key) do
+    Agent.get(pid, &Map.get(&1, key, %{}))
+  end
+
+  def get_all(pid \\ __MODULE__) do
+    Agent.get(pid, & &1)
   end
 end

@@ -207,3 +207,9 @@ iex(8)> GN.Selection.get_all()
   }
 }
 ```
+
+
+```
+iex(9)> GN.Selection.get_all() |> Map.get(2) |> GN.Library.put()              
+iex(10)> GN.Library.get("02b2a947-f888-4abf-b2a5-5df25668b0ee") |> GN.Selection.put_unevaluated()
+```
