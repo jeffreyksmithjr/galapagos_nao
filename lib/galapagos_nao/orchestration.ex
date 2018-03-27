@@ -13,7 +13,11 @@ defmodule GN.Orchestration do
     built_net = py |> call(build(built_layers))
     test_acc = py |> call(run(built_net))
 
-    %Network{layers: layers, test_acc: test_acc}
+    %Network{id: UUID.uuid4(), layers: layers, test_acc: test_acc}
+  end
+
+  def strip_empties(nets) do
+    Enum.filter(nets, fn {_k, v} -> Map.size(v) != 0 end)
   end
 
   def learn_generation(%Network{} = initial_net) do
@@ -34,10 +38,12 @@ defmodule GN.Orchestration do
   end
 
   def learn_generation(nets) do
+    clean_nets = strip_empties(nets)
+
     tasks =
       Task.Supervisor.async_stream_nolink(
         GN.TaskSupervisor,
-        nets,
+        clean_nets,
         &start_and_spawn(&1),
         timeout: GN.Parameters.get(__MODULE__, :timeout)
       )
@@ -55,7 +61,7 @@ defmodule GN.Orchestration do
     evolve(nets, generations, &decrement/1)
   end
 
-  def evolve_continuous(nets) do
+  def evolve_continual(nets) do
     evolve(nets, :infinity, & &1)
   end
 
