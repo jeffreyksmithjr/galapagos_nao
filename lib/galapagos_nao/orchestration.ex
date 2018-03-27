@@ -13,7 +13,7 @@ defmodule GN.Orchestration do
     built_net = py |> call(build(built_layers))
     test_acc = py |> call(run(built_net))
 
-    %Network{layers: layers, test_acc: test_acc}
+    %Network{id: UUID.uuid4(), layers: layers, test_acc: test_acc}
   end
 
   def learn_generation(%Network{} = initial_net) do
@@ -55,7 +55,7 @@ defmodule GN.Orchestration do
     evolve(nets, generations, &decrement/1)
   end
 
-  def evolve_continuous(nets) do
+  def evolve_continual(nets) do
     evolve(nets, :infinity, & &1)
   end
 

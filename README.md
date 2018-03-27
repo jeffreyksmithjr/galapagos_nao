@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/jeffreyksmithjr/galapagos_nao.svg?branch=master)](https://travis-ci.org/jeffreyksmithjr/galapagos_nao)
 [![codebeat badge](https://codebeat.co/badges/f2812f2e-4c0c-4b6c-812f-ff693e5e5fd5)](https://codebeat.co/projects/github-com-jeffreyksmithjr-galapagos_nao-master)
 # Galápagos Nǎo
-_A playground for continuous, interactive neuroevolution_
+_A playground for continual, interactive neuroevolution_
 
 ## Overview
 Galápagos Nǎo is intended to allow for the exploration of these ideas about machine learning:
@@ -55,7 +55,7 @@ iex(2)> GN.Selection.get_all()
     test_acc: 0.8553
   },
   2 => %GN.Network{
-    id: "0c2020ad-8944-4f2c-80bd-1d92c9d26535",
+    id: "58229333-a05d-4371-8f23-e8e55c37a2ec",
     layers: [
       dense: [64, :relu],
       batch_norm: [],
@@ -93,7 +93,7 @@ iex(4)> GN.Selection.get_all()
     test_acc: 0.8623
   }, 
   2 => %GN.Network{
-    id: "1b2d4f81-7a64-4529-92ed-74a7257fc00e",
+    id: "d2d3480b-c9b6-4751-9762-78d7a20ee34a",
     layers: [
       dense: [64, :relu],
       batch_norm: [],
@@ -108,22 +108,59 @@ iex(4)> GN.Selection.get_all()
 }
 ```
 
+These models can be placed in the `Library`. This process simply snapshots the models for future use. The originals remain in the population to give rise to future mutated offspring models.
+
+```
+iex(5)> network = GN.Selection.get_all() |> Map.get(2)   
+%GN.Network{
+  id: "a5b54fdd-8338-4001-a2e6-9285b150178d",
+  layers: [
+    dense: [64, :relu],
+    dense: [64, :relu],
+    batch_norm: [],
+    dense: [64, :relu],
+    flatten: [],
+    dense: [64, :relu]
+  ],
+  test_acc: 0.8811
+}
+iex(6)> GN.Library.put(network)
+:ok
+```
+
+Models can be retrieved by their IDs.
+```
+iex(7)> GN.Library.get("a5b54fdd-8338-4001-a2e6-9285b150178d")
+%GN.Network{
+  id: "a5b54fdd-8338-4001-a2e6-9285b150178d",
+  layers: [
+    dense: [64, :relu],
+    dense: [64, :relu],
+    batch_norm: [],
+    dense: [64, :relu],
+    flatten: [],
+    dense: [64, :relu]
+  ],
+  test_acc: 0.8811
+}
+```
+
 ## Interactive Neuroevolution
 
 Continuous learning processes work well in combination with the interactivity functionality Via the functions exposed by the `Parameters` module, the user can guide the evolution of new architectures, according to human intuition.
 
 ```
-iex(5)> GN.Parameters.put(GN.Selection, %{complexity_levels: 4})
+iex(8)> GN.Parameters.put(GN.Selection, %{complexity_levels: 4})
 :ok
 ```
 
 The learning process will then pick up these new parameters and alter the behavior of the evolutionary system on the next generation.
 
 ```
-iex(6)> GN.Selection.get_all()                                  
+iex(8)> GN.Selection.get_all()                                  
 %{
   1 => %GN.Network{
-    id: "1b2d4f81-7a64-4529-92ed-74a7257fc00e",
+    id: "dc7844db-ce67-4905-9749-0650bcb97a50",
     layers: [
       batch_norm: [],
       activation: [:tanh],
@@ -133,7 +170,7 @@ iex(6)> GN.Selection.get_all()
     test_acc: 0.8653
   },
   2 => %GN.Network{
-    id: "1b2d4f81-7a64-4529-92ed-74a7257fc00e",
+    id: "db3973f9-5b8a-4694-ad56-4a39027c6f1d",
     layers: [
       dense: [64, :relu],
       batch_norm: [],
@@ -146,7 +183,7 @@ iex(6)> GN.Selection.get_all()
     test_acc: 0.8717
   },
   3 => %GN.Network{
-    id: "1b2d4f81-7a64-4529-92ed-74a7257fc00e", 
+    id: "fdb3dc01-40eb-45eb-b3f3-6ce8b38745a7", 
     layers: [
       batch_norm: [],
       activation: [:tanh],
@@ -156,7 +193,7 @@ iex(6)> GN.Selection.get_all()
     test_acc: 0.8612
   },
   4 => %GN.Network{
-    id: "1b2d4f81-7a64-4529-92ed-74a7257fc00e",
+    id: "670c227a-9da0-472d-bf00-1324ed20c63b",
     layers: [
       dense: [64, :none],
       batch_norm: [],

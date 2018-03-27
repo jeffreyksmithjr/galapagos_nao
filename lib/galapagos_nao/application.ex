@@ -12,7 +12,8 @@ defmodule GN.Application do
       # {GN.Worker, arg},
       {GN.Selection, []},
       {GN.Supervisor, []},
-      {GN.Parameters, []}
+      {GN.Parameters, []},
+      {GN.Library, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
