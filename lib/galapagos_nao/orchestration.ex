@@ -20,7 +20,6 @@ defmodule GN.Orchestration do
     Enum.filter(nets, fn {_k, v} -> Map.size(v) != 0 end)
   end
 
-
   def learn_generation(%Network{} = initial_net) do
     generation_size = GN.Parameters.get(__MODULE__, :generation_size)
     # clone the initial net to create a generation
@@ -40,6 +39,7 @@ defmodule GN.Orchestration do
 
   def learn_generation(nets) do
     clean_nets = strip_empties(nets)
+
     tasks =
       Task.Supervisor.async_stream_nolink(
         GN.TaskSupervisor,
