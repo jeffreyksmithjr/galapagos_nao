@@ -17,6 +17,16 @@ From a programming perspective, it allows developers to explore:
 * Metaprogramming
 * Functional programming techniques for machine learning
 
+## Design
+
+Galápagos Nǎo implements an analogous algorithm to [MAP-Elites](https://arxiv.org/abs/1504.04909), producing different possible solutions to a given learning task, along a range of dimensions.
+The initial dimension of interest implemented is model complexity, providing a range of neural architectures, containing different levels of complexity.
+The parameters around the desired number of complexity levels to be used when bucketing elites is controllable via the `:complexity_levels` parameter.
+Elites are stored in the `Selection` process after each generation, and can be retrieved and inspected by the user, without interrupting training.
+If a user wants to store a given elite it can be placed in the `Library` process for further reuse and reintroduction into the population for further evolution.
+
+Learning can be done in a batch mode, with a user-supplied number of generations using the `GN.Orchestration.evolve/2` function or in a continual mode using the `GN.Orchestration.evolve_continual/1` function.
+
 ## Installation
 
 Since this library uses both Elixir and Python, the easiest way of getting started is to pull the latest Docker image: [jeffreyksmithjr/galapagos_nao](https://hub.docker.com/r/jeffreyksmithjr/galapagos_nao/)
@@ -207,9 +217,9 @@ iex(8)> GN.Selection.get_all()
   }
 }
 ```
-
-
+You can also interact with the models in the population by storing models in the library and then later reintroducing them into the population.
 ```
 iex(9)> GN.Selection.get_all() |> Map.get(2) |> GN.Library.put()              
 iex(10)> GN.Library.get("02b2a947-f888-4abf-b2a5-5df25668b0ee") |> GN.Selection.put_unevaluated()
 ```
+The `GN.Selection.put_unevaluated/1` function is used to place (clones of) models back into the population without removing any existing elite learned models. On the next generation, all models will be reevaluated for their fitness, and only the elites will be preserved for future generations. Models stored in the library will remain until removed, independent of the current state of any ongoing evolution.
