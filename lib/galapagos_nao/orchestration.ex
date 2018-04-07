@@ -11,9 +11,19 @@ defmodule GN.Orchestration do
     {:ok, py} = start()
     built_layers = Enum.map(layers, &build_layer(&1, py))
     built_net = py |> call(build(built_layers))
-    test_acc = py |> call(run(built_net))
 
-    %Network{id: UUID.uuid4(), layers: layers, test_acc: test_acc}
+    [net_json_string, {:"$erlport.opaque", :python, net_params}, test_acc] =
+      py |> call(run(built_net))
+
+    net_json = Poison.decode!(net_json_string)
+
+    %Network{
+      id: UUID.uuid4(),
+      layers: layers,
+      test_acc: test_acc,
+      json: net_json,
+      params: net_params
+    }
   end
 
   def strip_empties(nets) do

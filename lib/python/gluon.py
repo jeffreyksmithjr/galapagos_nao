@@ -85,7 +85,7 @@ def run(net):
         print("Epoch %s. Loss: %s, Train_acc %s, Test_acc %s" %
               (e, cumulative_loss/num_examples, train_accuracy, test_accuracy))
 
-    return float(test_accuracy)
+    return [net(mx.sym.var('data')).tojson(), net.collect_params(), float(test_accuracy)]
 
 def print_net(net):
     return net.__str__()

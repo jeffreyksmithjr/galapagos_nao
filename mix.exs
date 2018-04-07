@@ -27,7 +27,8 @@ defmodule GN.MixProject do
       {:export, "~> 0.1.1"},
       {:statistics, "~> 0.5.0"},
       {:uuid, "~> 1.1"},
-      {:confex, "~> 3.3.1"}
+      {:confex, "~> 3.3.1"},
+      {:poison, "~> 3.1"}
     ]
   end
 end
