@@ -36,3 +36,6 @@ RUN cd caffe2 && mkdir build && cd build \
     && rm -rf build
 
 ENV PYTHONPATH /usr/local
+
+# Install ONNX
+RUN pip install onnx
