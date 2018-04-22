@@ -9,6 +9,7 @@ defmodule GN.EvolutionTest do
     assert seed_params(layer_type) == expected_defaults
   end
 
+  @tag :skip
   test "builds a layer in Python" do
     layer_type = :dense
     params = [32, :relu]
