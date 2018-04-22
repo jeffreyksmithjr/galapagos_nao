@@ -1,4 +1,4 @@
-FROM jeffreyksmithjr/elixir-mxnet
+FROM jeffreyksmithjr/elixir-cntk
 
 COPY . .
 
