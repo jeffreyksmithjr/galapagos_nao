@@ -8,7 +8,7 @@ defmodule GN.Gluon do
     arguments = arguments || []
 
     quote do
-      :python.call(unquote(instance), :gluon, unquote(function), unquote(arguments))
+      :python.call(unquote(instance), :cntk_wrapper, unquote(function), unquote(arguments))
     end
   end
 
