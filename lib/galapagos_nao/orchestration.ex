@@ -4,26 +4,33 @@ defmodule GN.Orchestration do
   alias GN.Network, as: Network
   import GN.Selection, only: [select: 1]
 
-  def start_and_spawn({_level, net}) do
-    seed_layers = net.layers
-    layers = spawn_offspring(seed_layers)
+  def start_and_spawn({_level, _net}) do
+    # seed_layers = net.layers
+    # layers = spawn_offspring(seed_layers)
 
     {:ok, py} = start()
-    built_layers = Enum.map(layers, &build_layer(&1, py))
-    built_net = py |> call(build(built_layers))
+    # built_layers = Enum.map(layers, &build_layer(&1, py))
+    # {_unused, _unused, built_net} = py |> call(build())
+    {:ok, net_data} = File.read("./resources/models/mnist/model.onnx")
+    model_struct = Onnx.ModelProto.decode(net_data)
+    encoded_net_data = Onnx.ModelProto.encode(model_struct)
+    file_path = "/tmp/model-#{UUID.uuid4()}.onnx"
+    {:ok, file} = File.open(file_path, [:write])
+    IO.binwrite(file, encoded_net_data)
+    File.close(file)
 
-    [net_json_string, {:"$erlport.opaque", :python, net_params}, test_acc] =
-      py |> call(run(built_net))
+    [test_acc, learned_net_data] = py |> call(ffnet(file_path))
 
-    net_json = Poison.decode!(net_json_string)
+    # net_json = Poison.decode!(net_json_string)
 
-    %Network{
-      id: UUID.uuid4(),
-      layers: layers,
-      test_acc: test_acc,
-      json: net_json,
-      params: net_params
-    }
+    # %Network{
+    #   id: UUID.uuid4(),
+    #   layers: layers,
+    #   test_acc: test_acc,
+    #   json: net_json,
+    #   params: net_params
+    # }
+    Onnx.ModelProto.decode(learned_net_data)
   end
 
   def strip_empties(nets) do
