@@ -59,6 +59,7 @@ def ffnet(onnx_net):
     # test_features, test_labels = generate_random_data(minibatch_size, inputs, outputs)
     # avg_error = trainer.test_minibatch({features : test_features, label : test_labels})
     # print(' error rate on an unseen minibatch: {}'.format(avg_error))
+    
     filename = "model.onnx"
     net.save(filename, format=C.ModelFormat.ONNX)
     data = ""
