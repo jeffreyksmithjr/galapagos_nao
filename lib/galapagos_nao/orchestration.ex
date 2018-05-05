@@ -19,7 +19,8 @@ defmodule GN.Orchestration do
     IO.binwrite(file, encoded_net_data)
     File.close(file)
 
-    [test_acc, learned_net_data] = py |> call(ffnet(file_path))
+    # [test_acc, learned_net_data] = py |> call(ffnet(file_path))
+    test_acc = py |> call(simple_mnist())
 
     # net_json = Poison.decode!(net_json_string)
 
@@ -30,7 +31,8 @@ defmodule GN.Orchestration do
     #   json: net_json,
     #   params: net_params
     # }
-    Onnx.ModelProto.decode(learned_net_data)
+    # Onnx.ModelProto.decode(learned_net_data)
+    test_acc
   end
 
   def strip_empties(nets) do
