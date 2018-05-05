@@ -7,5 +7,5 @@ RUN apt-get update \
   && pip install mxnet==1.2.0b20180505 \
   && apt-get install -y  graphviz \
   && pip install graphviz \
-  && apt-get install -y python-imaging \
+  && pip install Pillow \
   && pip install onnx
