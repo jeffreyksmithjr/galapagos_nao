@@ -6,4 +6,6 @@ RUN apt-get update \
   && python get-pip.py \
   && pip install mxnet==1.2.0b20180505 \
   && apt-get install -y  graphviz \
-  && pip install graphviz
+  && pip install graphviz \
+  && apt-get install -y python-imaging \
+  && pip install onnx
