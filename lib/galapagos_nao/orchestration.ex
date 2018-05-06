@@ -1,7 +1,9 @@
 defmodule GN.Orchestration do
   import GN.Gluon
   import GN.Evolution, only: [spawn_offspring: 1, build_layer: 2]
+  import GN.MNIST
   alias GN.Network, as: Network
+  import GN.Python
   import GN.Selection, only: [select: 1]
 
   def start_and_spawn({_level, net}) do

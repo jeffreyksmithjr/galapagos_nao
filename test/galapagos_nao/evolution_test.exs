@@ -1,7 +1,8 @@
 defmodule GN.EvolutionTest do
   use ExUnit.Case
   import GN.Evolution
-  import GN.Gluon, only: [start: 0, activation_functions: 0]
+  import GN.Gluon, only: [activation_functions: 0]
+  import GN.Python
 
   test "looks up defaults" do
     layer_type = :dense
