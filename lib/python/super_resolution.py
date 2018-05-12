@@ -15,6 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# Adapted from Apache MXNet
+# https://github.com/apache/incubator-mxnet/blob/master/example/onnx/super_resolution.py
+
 """Testing super_resolution model conversion"""
 from __future__ import absolute_import as _abs
 from __future__ import print_function
