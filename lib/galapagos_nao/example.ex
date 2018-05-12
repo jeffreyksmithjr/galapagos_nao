@@ -1,6 +1,8 @@
 defmodule GN.Example do
   import GN.Orchestration, only: [evolve: 2, evolve_continual: 1]
   alias GN.Network, as: Network
+  import GN.Python
+  use Export.Python
 
   def seed_layers() do
     l1 = {:dense, [64, :relu]}
@@ -20,5 +22,10 @@ defmodule GN.Example do
 
   def infinite_example() do
     evolve_continual(%Network{id: UUID.uuid4(), layers: seed_layers()})
+  end
+
+  def onnx_example() do
+    {:ok, py} = start()
+    py |> Python.call(run(), from_file: "super_resolution")
   end
 end

@@ -1,6 +1,7 @@
 defmodule GN.CNTKTest do
   use ExUnit.Case
-  import GN.Gluon
+  import GN.CNTKWrapper
+  import GN.Python
 
   @tag :skip
   test "runs CNTK example" do

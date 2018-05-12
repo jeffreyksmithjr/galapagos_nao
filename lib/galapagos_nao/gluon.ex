@@ -1,16 +1,6 @@
 defmodule GN.Gluon do
-  def start() do
-    Export.Python.start(python: "python", python_path: Path.expand("lib/python"))
-  end
-
-  defmacro call(instance, expression) do
-    {function, _meta, arguments} = expression
-    arguments = arguments || []
-
-    quote do
-      :python.call(unquote(instance), :cntk_wrapper, unquote(function), unquote(arguments))
-    end
-  end
+  import GN.MNIST
+  import GN.Python
 
   # Basic layers
   @activation_functions [:relu, :sigmoid, :tanh, :softrelu]
