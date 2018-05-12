@@ -1,8 +1,11 @@
 defmodule GN.Orchestration do
   import GN.Gluon
   import GN.Evolution, only: [spawn_offspring: 1, build_layer: 2]
+  import GN.MNIST
   alias GN.Network, as: Network
+  import GN.Python
   import GN.Selection, only: [select: 1]
+  use Export.Python
 
   def start_and_spawn({_level, net}) do
     seed_layers = net.layers
@@ -10,10 +13,10 @@ defmodule GN.Orchestration do
 
     {:ok, py} = start()
     built_layers = Enum.map(layers, &build_layer(&1, py))
-    built_net = py |> call(build(built_layers))
+    built_net = py |> Python.call(build(built_layers), from_file: "mnist")
 
     [net_json_string, {:"$erlport.opaque", :python, net_params}, test_acc] =
-      py |> call(run(built_net))
+      py |> Python.call(run(built_net), from_file: "mnist")
 
     net_json = Poison.decode!(net_json_string)
 
