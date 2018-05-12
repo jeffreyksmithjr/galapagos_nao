@@ -3,11 +3,10 @@ defmodule GN.CNTKTest do
   import GN.CNTKWrapper
   import GN.Python
 
-  @tag :skip
   test "runs CNTK example" do
     {:ok, py} = start()
-    [last, avg] = py |> call(ffnet(:nothing))
-    assert last < 1.0
-    assert avg < 1.0
+    model_path = "./resources/models/mnist/model.onnx"
+    [last, _data] = py |> call(ffnet(model_path))
+    assert last <= 1.0
   end
 end

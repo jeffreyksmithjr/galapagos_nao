@@ -10,5 +10,4 @@ RUN mix format --check-formatted
 RUN mix compile
 RUN bash ./test.sh
 
-# CMD iex -S mix
 CMD bash
