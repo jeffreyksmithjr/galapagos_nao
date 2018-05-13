@@ -11,17 +11,16 @@ defmodule GN.LibraryTest do
   end
 
   test "adds new models to the library and returns them" do
-    net = %Network{id: "a-model", layers: [:flatten, []], test_acc: 0.01}
+    net = %Network{id: "a-model", test_acc: 0.01}
     Library.put(@test_agent_name, net)
     assert Library.get(@test_agent_name, net.id) == net
   end
 
   test "gets all models from the library" do
-    first_net = %Network{id: "first-model", layers: [:flatten, []], test_acc: 0.01}
+    first_net = %Network{id: "first-model", test_acc: 0.01}
 
     second_net = %Network{
       id: "second-model",
-      layers: [{:dense, [24, :softrelu]}, {:activation, [:tanh]}, {:dropout, [0.25]}],
       test_acc: 0.01
     }
 

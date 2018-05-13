@@ -10,42 +10,33 @@ defmodule GN.SelectionTest do
     {:ok, agent: agent}
   end
 
-  test "sets cutoffs" do
-    nets = [
-      %Network{
-        layers: [
-          {:dense, [24, :softrelu]},
-          {:activation, [:tanh]},
-          {:dropout, [0.25]},
-          {:flatten, []}
-        ]
+  def empty_network(size) do
+    nodes = List.duplicate(%Onnx.NodeProto{}, size)
+
+    %Network{
+      onnx: %Onnx.ModelProto{
+        graph: %Onnx.GraphProto{
+          node: nodes
+        }
       }
-    ]
+    }
+  end
+
+  test "sets cutoffs" do
+    nets = [empty_network(4), empty_network(1)]
 
     expectation = [2, 4]
     assert Selection.cutoffs(nets) == expectation
   end
 
   test "adds new elites" do
-    Selection.put(@test_agent_name, 1, %Network{
-      id: "old-one",
-      layers: [:flatten, []],
-      test_acc: 0.01
-    })
+    Selection.put(@test_agent_name, 1, %{empty_network(1) | id: "old-one", test_acc: 0.01})
 
-    Selection.put(@test_agent_name, 2, %Network{
-      id: "old-two",
-      layers: [{:dense, [24, :softrelu]}, {:activation, [:tanh]}, {:dropout, [0.25]}],
-      test_acc: 0.01
-    })
+    Selection.put(@test_agent_name, 2, %{empty_network(3) | id: "old-two", test_acc: 0.01})
 
     new_nets = [
-      %Network{id: "new-one", layers: [{:dense, [12]}], test_acc: 0.50},
-      %Network{
-        id: "new-two",
-        layers: [{:dense, [48, :softrelu]}, {:activation, [:tanh]}, {:dropout, [0.25]}],
-        test_acc: 0.60
-      }
+      %{empty_network(1) | id: "new-one", test_acc: 0.50},
+      %{empty_network(3) | id: "new-two", test_acc: 0.60}
     ]
 
     new_elites = Selection.select(@test_agent_name, new_nets)
@@ -56,7 +47,7 @@ defmodule GN.SelectionTest do
   end
 
   test "adds externally provided models" do
-    net = %Network{id: "external-model", layers: [:flatten, []], test_acc: 0.99}
+    net = %{empty_network(1) | id: "external-model", test_acc: 0.99}
     Selection.put_unevaluated(@test_agent_name, net)
 
     expectation = %{-1 => net}
@@ -64,15 +55,9 @@ defmodule GN.SelectionTest do
   end
 
   test "gets all elites" do
-    first_net = {1, %Network{id: "old-one", layers: [:flatten, []], test_acc: 0.01}}
+    first_net = {1, %{empty_network(1) | id: "old-one", test_acc: 0.01}}
 
-    second_net =
-      {2,
-       %Network{
-         id: "old-two",
-         layers: [{:dense, [24, :softrelu]}, {:activation, [:tanh]}, {:dropout, [0.25]}],
-         test_acc: 0.01
-       }}
+    second_net = {2, %{empty_network(4) | id: "old-two", test_acc: 0.01}}
 
     elites = [first_net, second_net]
 

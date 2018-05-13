@@ -5,7 +5,7 @@ defmodule GN.Selection do
     cutoffs = cutoffs(nets)
 
     for net <- nets do
-      complexity = length(net.layers)
+      complexity = length(net.onnx.graph.node)
       level = Enum.min([Enum.find_index(cutoffs, &(&1 >= complexity)) + 1, complexity_levels()])
       net_acc = net.test_acc
       elite_acc = Map.get(get(level), :test_acc)
@@ -20,7 +20,7 @@ defmodule GN.Selection do
 
   def cutoffs(nets) do
     max_complexity =
-      Enum.map(nets, &length(Map.get(&1, :layers)))
+      Enum.map(nets, &length(&1.onnx.graph.node))
       |> Enum.max()
 
     interval = max_complexity / complexity_levels()
