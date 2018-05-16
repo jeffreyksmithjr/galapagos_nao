@@ -2,7 +2,9 @@
   "confex": {:hex, :confex, "3.3.1", "8febaf751bf293a16a1ed2cbd258459cdcc7ca53cfa61d3f83d49dd276a992b4", [:mix], []},
   "erlport": {:hex, :erlport, "0.9.8", "b7dc57eb87f215a671926bfbcd23e6e9c76f8653b0d072627b41431ef51c4d20", [:rebar3], []},
   "export": {:hex, :export, "0.1.1", "6dfd268b0692428f89b9285859a2dc02b6dcd2e8fdfbca34ac6e6a331351df91", [:mix], [{:erlport, "~> 0.9", [hex: :erlport, optional: false]}]},
+  "onnxs": {:hex, :onnxs, "0.2.0", "232e8c1afdd48e82aff5d9d4f59a7ece53b2c2ac2e7a3b1b8c4db2f13ee0df04", [:mix], [{:protobuf, "~> 0.5.3", [hex: :protobuf, repo: "hexpm", optional: false]}], "hexpm"},
   "poison": {:hex, :poison, "3.1.0", "d9eb636610e096f86f25d9a46f35a9facac35609a7591b3be3326e99a0484665", [:mix], []},
+  "protobuf": {:hex, :protobuf, "0.5.4", "2e1b8eec211aff034ad8a14e3674220b0158bfb9a3c7128ac9d2a1ed1b3724d3", [:mix], [], "hexpm"},
   "statistics": {:hex, :statistics, "0.5.0", "9555b725b84b3cb784e1494de058598083c715509564021a66d2c9c976ae3f89", [:mix], []},
   "uuid": {:hex, :uuid, "1.1.8", "e22fc04499de0de3ed1116b770c7737779f226ceefa0badb3592e64d5cfb4eb9", [:mix], []},
 }

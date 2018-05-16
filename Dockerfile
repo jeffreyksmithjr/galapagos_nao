@@ -1,4 +1,4 @@
-FROM jeffreyksmithjr/elixir-mxnet
+FROM jeffreyksmithjr/elixir-cntk
 
 COPY . .
 
@@ -8,6 +8,6 @@ RUN mix local.rebar --force
 RUN mix deps.get
 RUN mix format --check-formatted
 RUN mix compile
-RUN mix test
+RUN bash ./test.sh
 
-CMD iex -S mix
+CMD bash

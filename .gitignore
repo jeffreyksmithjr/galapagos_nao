@@ -27,3 +27,5 @@ galapagos_nao-*.tar
 .idea/*
 
 *.pyc
+
+.vscode/*

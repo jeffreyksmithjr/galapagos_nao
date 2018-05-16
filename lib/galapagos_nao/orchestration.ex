@@ -1,32 +1,33 @@
 defmodule GN.Orchestration do
+  import GN.CNTKWrapper
   import GN.Gluon
   import GN.Evolution, only: [spawn_offspring: 1, build_layer: 2]
-  import GN.MNIST
   alias GN.Network, as: Network
   import GN.Python
   import GN.Selection, only: [select: 1]
   use Export.Python
 
-  def start_and_spawn({_level, net}) do
-    seed_layers = net.layers
-    layers = spawn_offspring(seed_layers)
+  def start_and_spawn({_level, seed_net}) do
+    net = spawn_offspring(seed_net)
 
+    {:ok, file_path} = write_net(net)
     {:ok, py} = start()
-    built_layers = Enum.map(layers, &build_layer(&1, py))
-    built_net = py |> Python.call(build(built_layers), from_file: "mnist")
-
-    [net_json_string, {:"$erlport.opaque", :python, net_params}, test_acc] =
-      py |> Python.call(run(built_net), from_file: "mnist")
-
-    net_json = Poison.decode!(net_json_string)
+    test_acc = py |> call(evaluate(file_path))
 
     %Network{
       id: UUID.uuid4(),
-      layers: layers,
       test_acc: test_acc,
-      json: net_json,
-      params: net_params
+      onnx: net.onnx
     }
+  end
+
+  def write_net(net) do
+    encoded_net_data = Onnx.ModelProto.encode(net.onnx)
+    file_path = "/tmp/model-#{UUID.uuid4()}.onnx"
+    {:ok, file} = File.open(file_path, [:write])
+    IO.binwrite(file, encoded_net_data)
+    File.close(file)
+    {:ok, file_path}
   end
 
   def strip_empties(nets) do
@@ -70,12 +71,12 @@ defmodule GN.Orchestration do
     generations - 1
   end
 
-  def evolve(nets, generations) do
-    evolve(nets, generations, &decrement/1)
-  end
-
   def evolve_continual(nets) do
     evolve(nets, :infinity, & &1)
+  end
+
+  def evolve(nets, generations) do
+    evolve(nets, generations, &decrement/1)
   end
 
   def evolve(nets, generations, count_function) when generations > 0 do

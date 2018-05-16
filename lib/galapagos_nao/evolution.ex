@@ -17,10 +17,15 @@ defmodule GN.Evolution do
   @mutation_rate 0.25
   @std_dev 2
 
-  def spawn_offspring(seed_layers, mutation_rate \\ @mutation_rate) do
-    duplicate(seed_layers, mutation_rate)
-    |> remove(mutation_rate)
-    |> Enum.map(&mutate(&1, mutation_rate))
+  def spawn_offspring(net, mutation_rate \\ @mutation_rate) do
+    new_layers =
+      duplicate(net.onnx.graph.node, mutation_rate)
+      |> remove(mutation_rate)
+      |> Enum.map(&mutate(&1, mutation_rate))
+
+    update_in(net, [Access.key!(:onnx), Access.key!(:graph), Access.key!(:node)], fn n ->
+      new_layers
+    end)
   end
 
   def duplicate(seed_layers, mutation_rate, all \\ false) do
@@ -63,21 +68,23 @@ defmodule GN.Evolution do
     Enum.filter(seed_layers, fn _ -> !should_mutate(mutation_rate) end)
   end
 
-  def mutate({seed_layer_type, seed_params} = _layer, mutation_rate) do
-    cond do
-      should_mutate(mutation_rate) -> mutate_layer(mutation_rate)
-      true -> {seed_layer_type, mutate_params(seed_params, mutation_rate)}
-    end
+  def mutate(
+        %Onnx.NodeProto{
+          attribute: [%Onnx.AttributeProto{t: %Onnx.TensorProto{float_data: float_data}}]
+        } = layer,
+        mutation_rate
+      ) do
+    mutated_data = mutate_params(float_data, mutation_rate)
+
+    update_in(
+      layer,
+      [Access.key!(:attribute), Access.all(), Access.key!(:t), Access.key!(:float_data)],
+      fn d -> mutated_data end
+    )
   end
 
-  def mutate_layer(mutation_rate) do
-    [new_layer_type] = Enum.take_random(Map.keys(layer_types()), 1)
-
-    new_params =
-      seed_params(new_layer_type)
-      |> mutate_params(mutation_rate)
-
-    {new_layer_type, new_params}
+  def mutate(layer, _mutation_rate) do
+    layer
   end
 
   def mutate_params(params, mutation_rate) do
@@ -93,7 +100,7 @@ defmodule GN.Evolution do
               |> Statistics.Math.to_int()
 
             is_float(param) ->
-              :rand.uniform()
+              Statistics.Distributions.Normal.rand(param, @std_dev)
           end
 
         true ->
