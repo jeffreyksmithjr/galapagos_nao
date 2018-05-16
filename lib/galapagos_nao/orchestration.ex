@@ -7,7 +7,9 @@ defmodule GN.Orchestration do
   import GN.Selection, only: [select: 1]
   use Export.Python
 
-  def start_and_spawn({_level, net}) do
+  def start_and_spawn({_level, seed_net}) do
+    net = spawn_offspring(seed_net)
+
     {:ok, file_path} = write_net(net)
     {:ok, py} = start()
     test_acc = py |> call(evaluate(file_path))
