@@ -8,7 +8,7 @@ defmodule GN.Orchestration do
   use Export.Python
 
   def start_and_spawn({_level, net}) do
-    {:ok, file_path} = write_net(net.onnx)
+    {:ok, file_path} = write_net(net)
     {:ok, py} = start()
     test_acc = py |> call(evaluate(file_path))
 
@@ -20,9 +20,7 @@ defmodule GN.Orchestration do
   end
 
   def write_net(net) do
-    {:ok, net_data} = File.read("./resources/models/mnist/model.onnx")
-    model_struct = Onnx.ModelProto.decode(net_data)
-    encoded_net_data = Onnx.ModelProto.encode(model_struct)
+    encoded_net_data = Onnx.ModelProto.encode(net.onnx)
     file_path = "/tmp/model-#{UUID.uuid4()}.onnx"
     {:ok, file} = File.open(file_path, [:write])
     IO.binwrite(file, encoded_net_data)
@@ -71,12 +69,12 @@ defmodule GN.Orchestration do
     generations - 1
   end
 
-  def evolve(nets, generations) do
-    evolve(nets, generations, &decrement/1)
-  end
-
   def evolve_continual(nets) do
     evolve(nets, :infinity, & &1)
+  end
+
+  def evolve(nets, generations) do
+    evolve(nets, generations, &decrement/1)
   end
 
   def evolve(nets, generations, count_function) when generations > 0 do
